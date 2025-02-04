@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Page</title>
+    <style>
+        /* Общие стили для страницы */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 2rem; /* Используем rem для адаптивности */
+        }
+
+        h1 {
+            color: #333;
+            font-size: 2rem; /* Размер шрифта адаптируется с помощью rem */
+        }
+
+        p {
+            font-size: 1.2rem; /* Используем rem для гибкости */
+            color: #555;
+        }
+
+        a {
+            text-decoration: none;
+            color: #0275d8;
+            font-size: 1.2rem; /* Размер шрифта адаптируется с помощью rem */
+            padding: 0.5rem 1rem; /* Используем rem для удобного расстояния */
+            border: 2px solid #0275d8;
+            border-radius: 0.5rem; /* Рекомендуется использовать rem для радиуса скругления */
+            background-color: #fff;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Стили для hover-эффекта */
+        a:hover {
+            background-color: #0275d8;
+            color: white;
+        }
+
+        /* Этот класс контейнера используется в HTML */
+        .container {
+            max-width: 80%; /* Используем проценты для гибкой ширины */
+            margin: auto;
+            padding: 2rem; /* Используем rem для удобного отступа */
+        }
+    </style>
+</head>
+<body>
+<!-- Используем класс container для контейнера -->
+<div class="container">
+    <h1>Welcome, <span th:text="${authUser.username}"></span>!</h1>
+    <p>Your roles: <span th:text="${#strings.join(authUser.roles, ', ')}"></span></p>
+    <a href="/logout">Logout</a>
+</div>
+</body>
+</html>

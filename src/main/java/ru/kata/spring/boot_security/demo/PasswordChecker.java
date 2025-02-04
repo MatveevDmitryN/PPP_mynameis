@@ -8,7 +8,7 @@ public class PasswordChecker {
         PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
         String rawPassword = "admin123";
-        String encodedPasswordFromDB = "$2a$10$Og.ph0pdLPfmzn2hmILNxO4IzZ3k6wnEtvdW6qd6dkL21f7U.el9u"; // Пароль из логов
+        String encodedPasswordFromDB = "$2a$10$RpjMApwkrA7CrO6nmPlJ5OvK4GWy4/Y7BH6kP3qeCWpFzw7CTPvum"; // Пароль из логов
 
         boolean matches = passwordEncoder.matches(rawPassword, encodedPasswordFromDB);
         System.out.println("Password matches: " + matches);

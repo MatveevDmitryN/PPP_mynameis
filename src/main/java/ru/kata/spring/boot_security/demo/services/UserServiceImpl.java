@@ -8,9 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repositories.UserRepository;
 import ru.kata.spring.boot_security.demo.repositories.RoleRepository;
-import ru.kata.spring.boot_security.demo.models.Role;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,16 +40,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public Optional<User> getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    @Override
     @Transactional
     public void saveUser(User user) {
         if (userRepository.existsByUsername(user.getUsername())) {
             throw new RuntimeException("User with this username already exists");
         }
 
-        // Хешируем пароль перед сохранением
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-
-        logger.debug("Encoded Password for {}: {}", user.getUsername(), user.getPassword());
+        if (!user.getPassword().startsWith("$2a$")) {
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
+        }
 
         userRepository.save(user);
     }

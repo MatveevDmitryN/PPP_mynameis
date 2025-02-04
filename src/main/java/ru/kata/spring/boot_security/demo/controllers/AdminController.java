@@ -22,17 +22,23 @@ public class AdminController {
 
     @GetMapping
     public String adminPage(Model model, @AuthenticationPrincipal User authUser) {
-        if (authUser == null || authUser.getRoles().stream()
-                .noneMatch(role -> role.getAuthority().equals("ROLE_ADMIN"))) {
+        if (authUser == null) {
             return "redirect:/login";
         }
+
+        // Проверяем наличие роли "ROLE_ADMIN"
+        boolean isAdmin = authUser.getAuthorities().stream()
+                .anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+        if (!isAdmin) {
+            return "redirect:/access-denied"; // Перенаправляем на страницу ошибки доступа
+        }
+
         model.addAttribute("users", userService.getAllUsers());
         model.addAttribute("authUser", authUser);
-        model.addAttribute("userRoles", authUser.getRoles().stream()
-                .map(Role::getAuthority)
-                .collect(Collectors.toSet()));
         return "admin";
     }
+
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable Long id, Model model) {

@@ -1,15 +1,108 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="author" content="Your Company or Name">
     <meta name="description" content="Admin panel to manage users and roles">
     <title>Admin Panel</title>
-    <!-- External CSS file for styling -->
-    <link rel="stylesheet" href="/css/styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+        }
+
+        header {
+            background-color: #4CAF50;
+            color: white;
+            padding: 20px;
+            width: 100%;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+        }
+
+        header h2 {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+
+        section {
+            width: 80%;
+            max-width: 1200px;
+            margin-top: 40px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h3 {
+            font-size: 22px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        table.user-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        table.user-table th,
+        table.user-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table.user-table th {
+            background-color: #f4f4f4;
+            color: #555;
+        }
+
+        table.user-table td a {
+            color: #4CAF50;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        table.user-table td a:hover {
+            text-decoration: underline;
+        }
+
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 15px;
+            background-color: #333;
+            color: white;
+            position: absolute;
+            bottom: 0;
+        }
+
+        footer a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+
 <header>
     <h1>Admin Panel</h1>
     <h2>Logged in as: <span th:text="${authUser.username}"></span></h2>
@@ -45,11 +138,5 @@
     <a href="/logout">Logout</a>
 </footer>
 
-<!-- Confirmation dialog (could be added with JavaScript) -->
-<!-- <div id="confirmDelete" class="modal">
-    <p>Are you sure you want to delete this user?</p>
-    <button>Yes</button>
-    <button>No</button>
-</div> -->
 </body>
 </html>

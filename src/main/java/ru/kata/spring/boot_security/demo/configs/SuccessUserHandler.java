@@ -19,11 +19,6 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
 
         authorities.forEach(authority -> System.out.println("Granted authority: " + authority.getAuthority()));
 
-        if (authorities.isEmpty()) {
-            response.sendRedirect(request.getContextPath() + "/user");
-            return;
-        }
-
         boolean isAdmin = authorities.stream().anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
         if (isAdmin) {
             response.sendRedirect(request.getContextPath() + "/admin");
@@ -31,6 +26,4 @@ public class SuccessUserHandler implements AuthenticationSuccessHandler {
             response.sendRedirect(request.getContextPath() + "/user");
         }
     }
-
-
 }

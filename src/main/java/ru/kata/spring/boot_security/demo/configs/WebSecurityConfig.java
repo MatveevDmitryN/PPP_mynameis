@@ -26,8 +26,8 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/index", "/login").permitAll()
-                        .requestMatchers("/admin/**").hasAuthority("ROLE_ADMIN")  // ✅ Исправлено
-                        .requestMatchers("/user/**").hasAnyAuthority("ROLE_USER", "ROLE_ADMIN")  // ✅ Исправлено
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/user/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -54,7 +54,6 @@ public class WebSecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    // Настройка аутентификации через UserDetailsService
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder());
     }

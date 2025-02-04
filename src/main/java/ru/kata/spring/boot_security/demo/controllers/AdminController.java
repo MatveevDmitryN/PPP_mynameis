@@ -1,14 +1,12 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.UserService;
-
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
@@ -21,10 +19,14 @@ public class AdminController {
     }
 
     @GetMapping
-    public String adminPage(Model model, @AuthenticationPrincipal User authUser) {
-        if (authUser == null) {
+    public String adminPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+        if (userDetails == null) {
             return "redirect:/login";
         }
+
+        // Получаем пользователя из базы по имени
+        User authUser = userService.getUserByUsername(userDetails.getUsername())
+                .orElseThrow(() -> new RuntimeException("User not found in database"));
 
         // Проверяем наличие роли "ROLE_ADMIN"
         boolean isAdmin = authUser.getAuthorities().stream()
@@ -38,7 +40,6 @@ public class AdminController {
         model.addAttribute("authUser", authUser);
         return "admin";
     }
-
 
     @GetMapping("/edit/{id}")
     public String editUser(@PathVariable Long id, Model model) {

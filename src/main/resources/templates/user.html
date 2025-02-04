@@ -1,59 +1,70 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Page</title>
+    <title>Профиль пользователя</title>
     <style>
-        /* Общие стили для страницы */
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
+            background-color: #f2f2f2;
             margin: 0;
-            padding: 2rem; /* Используем rem для адаптивности */
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .profile-container {
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 40px;
+            width: 100%;
+            max-width: 400px;
         }
 
         h1 {
+            font-size: 24px;
             color: #333;
-            font-size: 2rem; /* Размер шрифта адаптируется с помощью rem */
+            text-align: center;
         }
 
         p {
-            font-size: 1.2rem; /* Используем rem для гибкости */
+            font-size: 16px;
             color: #555;
+            text-align: center;
+            margin-bottom: 20px;
         }
 
-        a {
+        .button {
+            display: inline-block;
             text-decoration: none;
             color: #0275d8;
-            font-size: 1.2rem; /* Размер шрифта адаптируется с помощью rem */
-            padding: 0.5rem 1rem; /* Используем rem для удобного расстояния */
+            font-size: 16px;
+            padding: 10px 20px;
             border: 2px solid #0275d8;
-            border-radius: 0.5rem; /* Рекомендуется использовать rem для радиуса скругления */
+            border-radius: 4px;
             background-color: #fff;
+            text-align: center;
+            width: 100%;
+            box-sizing: border-box;
+            cursor: pointer;
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Стили для hover-эффекта */
-        a:hover {
+        .button:hover {
             background-color: #0275d8;
             color: white;
-        }
-
-        /* Этот класс контейнера используется в HTML */
-        .container {
-            max-width: 80%; /* Используем проценты для гибкой ширины */
-            margin: auto;
-            padding: 2rem; /* Используем rem для удобного отступа */
         }
     </style>
 </head>
 <body>
-<!-- Используем класс container для контейнера -->
-<div class="container">
-    <h1>Welcome, <span th:text="${authUser.username}"></span>!</h1>
-    <p>Your roles: <span th:text="${#strings.join(authUser.roles, ', ')}"></span></p>
-    <a href="/logout">Logout</a>
+<div class="profile-container">
+    <h1>Добро пожаловать, <span th:text="${authUser.username}">Пользователь</span>!</h1>
+    <p>Ваша роль: <span th:text="${#strings.listJoin(authUser.roles, ', ')}">Роль пользователя</span></p>
+    <a href="/logout" class="button">Выйти</a>
 </div>
 </body>
 </html>

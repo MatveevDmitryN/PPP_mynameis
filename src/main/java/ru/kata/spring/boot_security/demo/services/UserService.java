@@ -9,6 +9,6 @@ public interface UserService {
     Optional<User> getUserById(Long id);
     void saveUser(User user);
     void deleteUser(Long id);
-    void deleteAllUsers(); // Добавьте этот метод
-    Optional<User> getUserByUsername(String username);
+    void updateUser(Long id, User user);
+    void deleteAllUsers(); // Добавим метод для удаления всех пользователей
 }

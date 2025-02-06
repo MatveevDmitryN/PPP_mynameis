@@ -1,41 +1,31 @@
 package ru.kata.spring.boot_security.demo.controllers;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.kata.spring.boot_security.demo.models.User;
-import ru.kata.spring.boot_security.demo.services.UserService;
+import ru.kata.spring.boot_security.demo.security.CustomUserDetails;
 
 @Controller
 public class UserController {
 
-    private final UserService userService;  // Добавляем UserService
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping("/user")
-    public String userPage(Model model, @AuthenticationPrincipal UserDetails userDetails) {
+    public String userPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
         if (userDetails == null) {
-            return "redirect:/login";
+            logger.error("Authenticated user is null");
+            return "redirect:/login"; // Перенаправление на логин
         }
 
-        // Получаем пользователя из базы по имени
-        User authUser = userService.getUserByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found in database"));
+        logger.info("Authenticated user: {}", userDetails.getUsername());
 
-        model.addAttribute("authUser", authUser);
-        return "user";
-    }
+        // Добавляем проверки на null, если потребуется
+        model.addAttribute("user", userDetails);
+        model.addAttribute("roles", userDetails.getAuthorities()); // Используем getAuthorities()
 
-    @ExceptionHandler(Exception.class)
-    public String handleException(Exception e, Model model) {
-        model.addAttribute("errorMessage", e.getMessage());
-        return "error";
+        return "user-dashboard";
     }
 }
-

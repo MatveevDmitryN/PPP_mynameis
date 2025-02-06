@@ -1,8 +1,9 @@
 package ru.kata.spring.boot_security.demo.models;
 
+import jakarta.persistence.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import jakarta.persistence.*;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +18,10 @@ public class User implements UserDetails {
 
     private String username;
     private String password;
+    private String firstName;
+    private String lastName;
+    private int age;
+    private String email;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -26,17 +31,18 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-    // Конструктор без аргументов для JPA
     public User() {}
 
-    // Конструктор с аргументами для создания пользователя с ролями
-    public User(String username, String password, Set<Role> roles) {
+    public User(String username, String password, String firstName, String lastName, int age, String email, Set<Role> roles) {
         this.username = username;
         this.password = password;
-        this.roles = roles == null ? new HashSet<>() : roles; // Защита от null
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.age = age;
+        this.email = email;
+        this.roles = roles != null ? roles : new HashSet<>();
     }
 
-    // Переопределенные методы UserDetails
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return roles;
@@ -72,7 +78,6 @@ public class User implements UserDetails {
         return true;
     }
 
-    // Геттеры и сеттеры для других полей
     public Long getId() {
         return id;
     }
@@ -81,12 +86,36 @@ public class User implements UserDetails {
         this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Role> getRoles() {
@@ -94,6 +123,15 @@ public class User implements UserDetails {
     }
 
     public void setRoles(Set<Role> roles) {
-        this.roles = roles != null ? roles : new HashSet<>(); // Защита от null
+        this.roles = roles != null ? roles : new HashSet<>();
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }
+

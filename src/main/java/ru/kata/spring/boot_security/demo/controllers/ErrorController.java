@@ -8,7 +8,7 @@ public class ErrorController {
 
     @RequestMapping("/access-denied")
     public String accessDenied() {
-        return "accessDenied";  // Страница, которая будет отображена при ошибке доступа
+        return "access-denied";  // Страница, которая будет отображена при ошибке доступа
     }
 
     @RequestMapping("/custom-error")

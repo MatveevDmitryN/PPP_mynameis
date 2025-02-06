@@ -10,17 +10,19 @@ public class MvcConfig implements WebMvcConfigurer {
     // Регистрация контроллеров представлений
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        // Добавляем контроллер для маршрута /user, который будет отображать представление "user"
-        registry.addViewController("/user").setViewName("user");
-
-        // Можно также добавить другие маршруты, например:
-        // Регистрация страницы для главной
+        // Статическая страница для главной страницы
         registry.addViewController("/").setViewName("index");
 
         // Страница входа
         registry.addViewController("/login").setViewName("login");
 
-        // Добавить страницы для админа, если нужно
-        registry.addViewController("/admin").setViewName("admin");
+        // Добавление страницы для ошибки доступа (например, 403)
+        registry.addViewController("/access-denied").setViewName("access-denied");
+
+        // Добавление страницы для ошибки (например, 404)
+        registry.addViewController("/error").setViewName("error");
+
+        // Это страницы, которые не требуют логики контроллеров
+        // Но для этих маршрутов у вас должны быть соответствующие контроллеры
     }
 }

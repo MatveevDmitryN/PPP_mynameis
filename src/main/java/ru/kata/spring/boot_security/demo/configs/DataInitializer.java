@@ -2,16 +2,16 @@ package ru.kata.spring.boot_security.demo.configs;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.boot.CommandLineRunner;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
-import java.util.HashSet;
+import java.util.Set;
 
 @Configuration
 public class DataInitializer {
@@ -31,7 +31,7 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner dataLoader() {
         return args -> {
-            // Удаляем всех пользователей и роли
+            // Удаляем все существующие пользователи и роли перед добавлением новых
             userService.deleteAllUsers();
             roleService.deleteAllRoles();
 
@@ -39,28 +39,34 @@ public class DataInitializer {
             Role roleAdmin = new Role("ROLE_ADMIN");
             Role roleUser = new Role("ROLE_USER");
 
-            roleService.saveRole(roleAdmin);
-            roleService.saveRole(roleUser);
+            // Проверка, если роли уже существуют в базе данных, не добавлять их снова
+            if (roleService.getAllRoles().isEmpty()) {
+                roleService.saveRole(roleAdmin);
+                roleService.saveRole(roleUser);
+                logger.info("Roles have been created successfully.");
+            } else {
+                logger.info("Roles already exist in the database.");
+            }
 
-            // Хешируем пароли с использованием BCryptPasswordEncoder
-            String rawPasswordAdmin = "admin123";
-            String rawPasswordUser = "user123";
-            String encodedPasswordAdmin = passwordEncoder.encode(rawPasswordAdmin);
-            String encodedPasswordUser = passwordEncoder.encode(rawPasswordUser);
+            // Кодируем пароли пользователей
+            String encodedPasswordAdmin = passwordEncoder.encode("123");
+            String encodedPasswordUser = passwordEncoder.encode("123");
 
             logger.debug("Encoded Admin Password: {}", encodedPasswordAdmin);
             logger.debug("Encoded User Password: {}", encodedPasswordUser);
 
-            // Создаем пользователей с зашифрованными паролями
-            User admin = new User("admin", encodedPasswordAdmin, new HashSet<>());
-            admin.getRoles().add(roleAdmin);
-            userService.saveUser(admin);
+            // Создаем пользователей
+            User admin = new User("admin", encodedPasswordAdmin, "John", "Doe", 35, "admin@example.com", Set.of(roleAdmin));
+            User user = new User("user", encodedPasswordUser, "Jane", "Smith", 28, "user@example.com", Set.of(roleUser));
 
-            User user = new User("user", encodedPasswordUser, new HashSet<>());
-            user.getRoles().add(roleUser);
-            userService.saveUser(user);
-
-            logger.info("Admin and User have been created successfully!");
+            // Проверка на наличие пользователей перед сохранением, чтобы избежать дублирования
+            if (userService.getAllUsers().isEmpty()) {
+                userService.saveUser(admin);
+                userService.saveUser(user);
+                logger.info("Admin and User have been created successfully!");
+            } else {
+                logger.info("Users already exist in the database.");
+            }
         };
     }
 }

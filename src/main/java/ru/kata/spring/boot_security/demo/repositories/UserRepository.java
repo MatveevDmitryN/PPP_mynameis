@@ -10,11 +10,8 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
 
-    // Метод для подгрузки пользователя с ролями по имени
     @Query("SELECT u FROM User u JOIN FETCH u.roles WHERE u.username = :username")
     Optional<User> findByUsername(String username);
 
-    // Метод для проверки существования пользователя с таким именем
     boolean existsByUsername(String username);  // Проверяет, существует ли пользователь с таким именем
-
 }

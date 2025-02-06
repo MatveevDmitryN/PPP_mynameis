@@ -53,6 +53,24 @@
             color: #333;
         }
 
+        .add-button {
+            display: inline-block;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            text-align: center;
+        }
+
+        .add-button:hover {
+            background-color: #45a049;
+        }
+
         table.user-table {
             width: 100%;
             border-collapse: collapse;
@@ -90,14 +108,18 @@
             bottom: 0;
         }
 
-        footer a {
+        footer .logout-button {
+            padding: 10px 20px;
+            background-color: #f44336;
             color: white;
-            text-decoration: none;
             font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
-        footer a:hover {
-            text-decoration: underline;
+        footer .logout-button:hover {
+            background-color: #e53935;
         }
     </style>
 </head>
@@ -105,28 +127,43 @@
 
 <header>
     <h1>Admin Panel</h1>
-    <h2>Logged in as: <span th:text="${authUser.username}"></span></h2>
+    <h2>Logged in as: <span th:text="${admin.username}"></span></h2>
 </header>
 
 <section>
     <h3>All Users</h3>
+
+    <a href="/admin/create" class="add-button">Add New User</a>
 
     <table class="user-table">
         <thead>
         <tr>
             <th>ID</th>
             <th>Username</th>
+            <th>First Name</th>
+            <th>Second Name</th>
+            <th>Email</th>
+            <th>Age</th>
             <th>Roles</th>
             <th>Actions</th>
         </tr>
         </thead>
         <tbody>
+        <tr th:if="${#lists.isEmpty(users)}">
+            <td colspan="8" style="text-align: center;">Нет пользователей</td>
+        </tr>
         <tr th:each="user : ${users}">
             <td th:text="${user.id}"></td>
             <td th:text="${user.username}"></td>
-            <td th:text="${#strings.listJoin(user.roles, ', ')}"></td>
+            <td th:text="${user.firstName}"></td>
+            <td th:text="${user.lastName}"></td>
+            <td th:text="${user.email}"></td>
+            <td th:text="${user.age}"></td>
             <td>
-                <a th:href="@{/admin/edit/{id}(id=${user.id})}">Edit</a> |
+                <span th:each="role : ${user.roles}" th:text="${role.name}"></span>
+            </td>
+            <td>
+                <a th:href="@{/admin/edit-user/{id}(id=${user.id})}">Edit</a> |
                 <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a>
             </td>
         </tr>
@@ -135,7 +172,9 @@
 </section>
 
 <footer>
-    <a href="/logout">Logout</a>
+    <form action="/logout" method="post" style="display: inline;">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
 </footer>
 
 </body>
